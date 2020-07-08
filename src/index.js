@@ -4,16 +4,39 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import rootReducer from './store/reducer/rootReducer'
 import thunk from 'redux-thunk'
+import { ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase'
+import firebase from './config/firebaseConfig'
+import { createFirestoreInstance, getFirestore, reduxFirestore } from 'redux-firestore'
 
-const store = createStore(rootReducer, applyMiddleware(thunk))
+// ======================================================
+// Middleware Configuration
+// ======================================================
+const middleware = [
+  thunk.withExtraArgument({ getFirestore }),
+  // This is where you add other middleware like redux-observable
+];
+const store = createStore(rootReducer, 
+  compose(
+    applyMiddleware(...middleware),
+    reduxFirestore(firebase)
+    )
+  )
+const rrfProps = {
+  firebase,
+  config: {},
+  dispatch: store.dispatch,
+  createFirestoreInstance
+}
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <App />
+      </ReactReduxFirebaseProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
