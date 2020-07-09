@@ -16,7 +16,7 @@ import { createFirestoreInstance, getFirestore, reduxFirestore } from 'redux-fir
 // Middleware Configuration
 // ======================================================
 const middleware = [
-  thunk.withExtraArgument({ getFirestore }),
+  thunk.withExtraArgument({ getFirestore, getFirebase }),
   // This is where you add other middleware like redux-observable
 ];
 const store = createStore(rootReducer, 

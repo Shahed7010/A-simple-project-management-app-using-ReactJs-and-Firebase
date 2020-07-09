@@ -9,7 +9,6 @@ class Dashboard extends Component {
     render() {
         // console.log(this.props)
         const {projects} = this.props;
-        console.log(projects)
         return (
             <div className="container d-flex justify-content-center">
                 <div className="row col-md-10">
@@ -22,7 +21,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) =>{
-    console.log(state.firestore.data.projects)
+    // console.log(state.firestore.data.projects)
     return{
         projects : state.firestore.ordered.projects
     }
