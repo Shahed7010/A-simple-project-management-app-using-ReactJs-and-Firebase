@@ -12,6 +12,7 @@ body {
   background-size: 100%;
   background-position: bottom;
   min-height: 100%;
+  background-attachment: fixed;
 }
 
 code {

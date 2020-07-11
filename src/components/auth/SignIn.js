@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { signin } from '../../store/actions/authAction'
+import {Redirect} from 'react-router-dom'
 
 function SignIn(props) {
     const [state, setState] = useState({
@@ -19,22 +20,25 @@ function SignIn(props) {
         // console.log(props)
         props.signin(state);
     }
-    const authError = props.loginError;
-    // console.log(authError)
+    const { loginError, auth} = props;
+    // console.log(loginError)
+        if (auth.uid){
+            return <Redirect to="/" />
+        }
     return (
         <div className="container col-md-6 mt-2">
             <form className="form-group" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
-                    <input type="email" onChange={handleChange} className="form-control" id="email" placeholder="Enter email" />
+                    <input type="email" onChange={handleChange} className="form-control" id="email" required placeholder="Enter email" />
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password:</label>
-                    <input type="password" onChange={handleChange} className="form-control" id="password" placeholder="Enter password" />
+                    <input type="password" onChange={handleChange} className="form-control" id="password" required placeholder="Enter password" />
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
                 <div className="text-center bg-warning mt-2">
-                    {authError ? authError : null}
+                    {loginError ? loginError : null}
                 </div>
             </form>
         </div>
@@ -43,7 +47,8 @@ function SignIn(props) {
 
 const mapStateToProps = (state) => {
     return {
-        loginError: state.auth.loginError
+        loginError: state.auth.authError,
+        auth: state.firebase.auth
     }
 }
 const mapDispatchToProps = (dispatch) => {

@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
+import {signup} from '../../store/actions/authAction'
 
-export default function SignUp() {
+function SignUp(props) {
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -15,8 +18,14 @@ export default function SignUp() {
     }
     const handleSubmit= (e) =>{
         e.preventDefault();
-        console.log(state)
+        // console.log(state)
+        props.signup(state)
     }
+    const { signupError, auth} = props;
+    // console.log(loginError)
+        if (auth.uid){
+            return <Redirect to="/" />
+        }
     return (
         <div className="container col-md-6 mt-2">
             <form className="form-group" onSubmit={handleSubmit}>
@@ -37,9 +46,23 @@ export default function SignUp() {
                     <input type="password" onChange={handleChange} className="form-control" id="password" required placeholder="Enter password"/>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
+                <div className="text-center bg-warning mt-2">
+                    {signupError ? signupError : null}
+                </div>
             </form>
         </div>
     )
 }
 
-
+const mapStateToProps= (state) =>{
+    return{
+        auth: state.firebase.auth,
+        signupError: state.auth.authError
+    }
+}
+const mapDispatchToProps= (dispatch) =>{
+    return{
+        signup: (newUser) => dispatch(signup(newUser))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
