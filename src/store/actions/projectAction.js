@@ -17,3 +17,17 @@ export const createProject = (project) =>{
         })
     }
 };
+export const deleteProject = (projectId) =>{
+    return (dispatch, getState,  { getFirestore } ) =>{
+        //make async call to database
+        const fireStore = getFirestore();
+        const profile = getState().firebase.profile;
+        const authorId = getState().firebase.auth.uid;
+        fireStore.collection('projects').doc(projectId).delete().then(()=>{
+            dispatch({type:'DELETE_PROJECT_SUCCESS'});
+        }).catch((err)=>{
+        dispatch({type:'DELETE_PROJECT_ERROR', err});
+        })
+    }
+};
+

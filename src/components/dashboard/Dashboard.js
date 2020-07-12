@@ -17,7 +17,7 @@ class Dashboard extends Component {
             <div className="container d-flex justify-content-center">
                 <div className="row col-md-10">
                     <ProjectList projects={projects}/>
-                    <Notification />
+                    {/* <Notification /> */}
                 </div>
             </div>
         )
@@ -25,13 +25,15 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = (state) =>{
-    console.log(state)
+    // console.log(state)
     return{
         projects : state.firestore.ordered.projects,
         auth: state.firebase.auth
     }
 }
 export default compose(
-    firestoreConnect(()=> ['projects']), // sync todos collection from Firestore into redux
+    firestoreConnect([
+        {collection:'projects', orderBy: ['createdAt', 'desc']}
+    ]), // sync todos collection from Firestore into redux
     connect(mapStateToProps)
   )(Dashboard)
